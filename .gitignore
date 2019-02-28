@@ -1,0 +1,7 @@
+# build
+CMakeFiles/*
+*.cmake
+*.a
+CMakeCache.txt
+Makefile
+test
