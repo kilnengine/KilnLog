@@ -4,7 +4,7 @@ extern "C" {
 
 #include <stdbool.h>
 
-// Verbosity definitions
+// Level definitions
 #define KILN_LOG_CRITICAL   -2
 #define KILN_LOG_ERROR      -1
 #define KILN_LOG_INFO       0
@@ -13,9 +13,9 @@ extern "C" {
 
 // Interface
 typedef struct {
-    void (*const print)(int verbosity, char* msg, ...);
+    void (*const print)(int level, char* msg, ...);
     // void (*const trace)(void);
-    // void (*const setVerbosity)(int verbosity);
+    void (*const setLevel)(int level);
     // void (*const setFileLocation)(const char* file);
     // void (*const setSilent)(bool silent);
     // void (*const setLineWrap)(bool wrap);
