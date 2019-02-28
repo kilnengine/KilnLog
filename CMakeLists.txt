@@ -4,7 +4,7 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-set(CMAKE_C_FLAGS "--std=c17 -Werror")
+set(CMAKE_C_FLAGS "--std=c17 -Werror -Wextra")
 
 project(KilnLog)
 
