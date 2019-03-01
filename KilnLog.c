@@ -38,7 +38,7 @@ void put(int level, char* msg, ...) {
 
     // container for the message format
     char* prefix = (char*)malloc(prefixlen);
-    char* fmsg = (char*)malloc(strlen(prefix) + strlen(msg) + 100);
+    char* fmsg = (char*)malloc(strlen(prefix) + strlen(msg) + 512);
 
     switch(level) {
         case KLOG_CRI:
