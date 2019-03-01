@@ -120,9 +120,25 @@ void setFile(const char* file) {
     put(KLOG_INF, "Writing logs to file '%s'.", file);
 }
 
+void setSilent(const bool _silent) {
+    silent = _silent;
+    put(KLOG_INF, "Silent logging is %s.", silent ? "active" : "inactive");
+}
+
+void flush() {
+    FILE* file;
+    if (file = fopen(logFile, "w")) {
+        put(KLOG_INF, "Log file flushed.");
+    } else {
+        put(KLOG_ERR, "Log file was not accessible when attempting to flush! (%s)", logFile);
+    }
+}
+
 
 kiln_log_interface const KLog = { 
     put,
     setLevel,
-    setFile
+    setFile,
+    setSilent,
+    flush
 };

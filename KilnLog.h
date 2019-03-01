@@ -17,9 +17,9 @@ typedef struct {
     // void (*const trace)(void);
     void (*const setLevel)(int level);
     void (*const setFile)(const char* file);
-    // void (*const setSilent)(bool silent);
+    void (*const setSilent)(const bool silent);
     // void (*const setLineWrap)(bool wrap);
-    // void (*const flush)(void);
+    void (*const flush)(void);
     // void (*const loadConfig)(const char* config);
 } kiln_log_interface;
 
