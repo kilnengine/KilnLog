@@ -21,6 +21,13 @@ static char* logFilePath     = "kilnlog.log";
 static bool silent           = false;
 static bool lineWrap         = true;
 
+/**
+ * Write output to std out/err and to the log file.
+ * @param int level
+ * @param char* msg Formatted message string.
+ * @param ... Arguments to be used with the format string.
+ */
+
 void put(int level, char* msg, ...) {
     if (level > logLevel) { return; }
     
@@ -30,11 +37,12 @@ void put(int level, char* msg, ...) {
     const int prefixlen = 10;
 
     // container for the message format
-    char* prefix = (char*)malloc(prefixlen + strlen(msg));
+    char* prefix = (char*)malloc(prefixlen);
+    char* fmsg = (char*)malloc(strlen(prefix) + strlen(msg) + 100);
 
     switch(level) {
         case KLOG_CRI:
-        sprintf(prefix, "%sCRI%s:%s ", COLOR_RED_ON_YELLOW, COLOR_NOR, COLOR_CRI); break;
+        sprintf(prefix, "%sCRI%s%s: ", COLOR_RED_ON_YELLOW, COLOR_NOR, COLOR_CRI); break;
 
         case KLOG_ERR:
         sprintf(prefix, "%sERR: ", COLOR_ERR); break;
@@ -49,12 +57,23 @@ void put(int level, char* msg, ...) {
         sprintf(prefix, "%sDEB: ", COLOR_DEB); break;
     }
 
-    printf("%s", prefix);
+    sprintf(fmsg, "%s%s\n", prefix, msg);
     va_start(args, msg);
-    vprintf(msg, args);
+    vsprintf(fmsg, fmsg, args);
     va_end(args);
-    printf("%c", '\n');
+
+    if (!silent) {
+        printf("%s", fmsg);
+    }
+
+    free(prefix);
+    free(fmsg);
 }
+
+/**
+ * Sets what the highest level log that should be used.
+ * @param int level
+ */
 
 void setLevel(int level) {
     if (level >= KLOG_ERR && level <= KLOG_DEB) {
@@ -66,6 +85,8 @@ void setLevel(int level) {
         setLevel(defaultLevel);
     }
 }
+
+
 
 kiln_log_interface const KLog = { 
     put,
