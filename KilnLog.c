@@ -30,6 +30,10 @@ static bool lineWrap         = true;
 
 void put(int level, char* msg, ...) {
     if (level > logLevel) { return; }
+    if (level < KLOG_CRI) {
+        put(KLOG_WAR, "Log level too low (%d). Using %d instead.", level, KLOG_INF);
+        level = KLOG_INF; 
+    }
     
     va_list args;
 
@@ -38,6 +42,7 @@ void put(int level, char* msg, ...) {
 
     // container for the message format
     char* prefix = (char*)malloc(prefixlen);
+    // the final formatted message. 512 byte buffer for format arguments.
     char* fmsg = (char*)malloc(strlen(prefix) + strlen(msg) + 512);
 
     switch(level) {
