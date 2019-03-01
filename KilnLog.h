@@ -16,7 +16,7 @@ typedef struct {
     void (*const put)(int level, char* msg, ...);
     // void (*const trace)(void);
     void (*const setLevel)(int level);
-    // void (*const setFileLocation)(const char* file);
+    void (*const setFile)(const char* file);
     // void (*const setSilent)(bool silent);
     // void (*const setLineWrap)(bool wrap);
     // void (*const flush)(void);

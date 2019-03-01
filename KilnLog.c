@@ -17,7 +17,7 @@ static const char* COLOR_RED_ON_YELLOW = "\x1B[93;41m";
 
 // Settings
 static int logLevel          = KLOG_DEB;
-static char* logFile     = "kilnlog.log";
+static char logFile[256]     = "kilnlog.log";
 static bool silent           = false;
 static bool lineWrap         = true;
 
@@ -114,8 +114,15 @@ void setLevel(int level) {
     }
 }
 
+void setFile(const char* file) {
+    memset(logFile, 0, 256);
+    strcpy(logFile, file);
+    put(KLOG_INF, "Writing logs to file '%s'.", file);
+}
+
 
 kiln_log_interface const KLog = { 
     put,
-    setLevel
+    setLevel,
+    setFile
 };

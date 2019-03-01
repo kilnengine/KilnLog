@@ -2,6 +2,7 @@
 #include "stdio.h"
 
 int main(int argc, const char* argv[]) {
+    KLog.setFile("logfile.log");
     KLog.put(KLOG_CRI, "TEST");
     KLog.put(KLOG_ERR, "TEST");
     KLog.put(KLOG_INF, "TEST");
