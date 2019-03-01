@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 static const char* COLOR_NOR = "\x1B[0m";
 static const char* COLOR_CRI = "\x1B[31m";
@@ -20,6 +21,8 @@ static int logLevel          = KLOG_DEB;
 static char logFile[256]     = "kilnlog.log";
 static bool silent           = false;
 static bool lineWrap         = true;
+
+char* getTimeStr();
 
 /**
  * Write output to std out/err and to the log file.
@@ -73,6 +76,9 @@ void put(int level, char* msg, ...) {
         break;
     }
 
+    char* timestr = getTimeStr();
+    sprintf(fmsg + strlen(fmsg), "[%s] ", timestr);
+
     va_start(args, msg);
     vsprintf(fmsg + strlen(fmsg), msg, args);
     va_end(args);
@@ -101,6 +107,7 @@ void put(int level, char* msg, ...) {
     fclose(file);
 
     free(color);
+    free(timestr);
     free(fmsg);
 }
 
@@ -162,3 +169,14 @@ kiln_log_interface const KLog = {
     setSilent,
     flush
 };
+
+char* getTimeStr() {
+    time_t t = time(NULL);
+    struct tm* ltime = localtime(&t);
+
+    char* result = (char*)malloc(25);
+
+    strftime(result, 25, "%F|%T", ltime);
+
+    return result;
+}
