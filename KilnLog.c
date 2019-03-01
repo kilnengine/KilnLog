@@ -1,4 +1,5 @@
 #include "KilnLog.h"
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -23,32 +24,37 @@ static bool lineWrap           = true;
 void put(int level, char* msg, ...) {
     if (level > logLevel) { return; }
     
-    va_list arg;
+    va_list args;
 
     // color + level length
     const int prefixlen = 10;
 
     // container for the message format
-    char* fmsg = (char*)malloc(prefixlen);
+    char* prefix = (char*)malloc(prefixlen + strlen(msg));
+    char* fmst;
 
     switch(level) {
         case KLOG_CRI:
-        sprintf(fmsg, "%sCRI%s:%s ", COLOR_RED_ON_YELLOW, COLOR_NOR, COLOR_CRI); break;
+        sprintf(prefix, "%sCRI%s:%s ", COLOR_RED_ON_YELLOW, COLOR_NOR, COLOR_CRI); break;
 
         case KLOG_ERR:
-        sprintf(fmsg, "%sERR: ", COLOR_ERR); break;
+        sprintf(prefix, "%sERR: ", COLOR_ERR); break;
 
         case KLOG_INF:
-        sprintf(fmsg, "%sINF: ", COLOR_INF); break;
+        sprintf(prefix, "%sINF: ", COLOR_INF); break;
 
         case KLOG_WAR:
-        sprintf(fmsg, "%sWAR: ", COLOR_WAR); break;
+        sprintf(prefix, "%sWAR: ", COLOR_WAR); break;
 
         case KLOG_DEB:
-        sprintf(fmsg, "%sDEB: ", COLOR_DEB); break;
+        sprintf(prefix, "%sDEB: ", COLOR_DEB); break;
     }
 
-    printf("%s%s\n", fmsg, msg);
+    printf("%s", prefix);
+    va_start(args, msg);
+    vprintf(msg, args);
+    va_end(args);
+    printf("%c", '\n');
 }
 
 void setLevel(int level) {
