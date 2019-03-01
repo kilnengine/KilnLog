@@ -37,41 +37,39 @@ void put(int level, char* msg, ...) {
     
     va_list args;
 
-    // color + level length
-    const int prefixlen = 10;
+    // max length of the final formatted message. 512 byte buffer for variable args and prefix
+    const int maxLen = strlen(msg) + 512;
 
-    // container for the message format
-    char* prefix = (char*)malloc(prefixlen);
-    // the final formatted message. 512 byte buffer for format arguments.
-    char* fmsg = (char*)malloc(strlen(prefix) + strlen(msg) + 512);
+    // the final formatted message
+    char* fmsg = (char*)malloc(maxLen);
 
     switch(level) {
         case KLOG_CRI:
-        sprintf(prefix, "%sCRI%s%s: ", COLOR_RED_ON_YELLOW, COLOR_NOR, COLOR_CRI); break;
+        sprintf(fmsg, "%sCRI%s%s: ", COLOR_RED_ON_YELLOW, COLOR_NOR, COLOR_CRI); break;
 
         case KLOG_ERR:
-        sprintf(prefix, "%sERR: ", COLOR_ERR); break;
+        sprintf(fmsg, "%sERR: ", COLOR_ERR); break;
 
         case KLOG_INF:
-        sprintf(prefix, "%sINF: ", COLOR_INF); break;
+        sprintf(fmsg, "%sINF: ", COLOR_INF); break;
 
         case KLOG_WAR:
-        sprintf(prefix, "%sWAR: ", COLOR_WAR); break;
+        sprintf(fmsg, "%sWAR: ", COLOR_WAR); break;
 
         case KLOG_DEB:
-        sprintf(prefix, "%sDEB: ", COLOR_DEB); break;
+        sprintf(fmsg, "%sDEB: ", COLOR_DEB); break;
     }
 
-    sprintf(fmsg, "%s%s\n", prefix, msg);
     va_start(args, msg);
-    vsprintf(fmsg, fmsg, args);
+    vsprintf(fmsg + strlen(fmsg), msg, args);
     va_end(args);
+    sprintf(fmsg + strlen(fmsg), "%c", '\n');
 
     if (!silent) {
-        printf("%s", fmsg);
+        printf("%s%s", fmsg, COLOR_NOR);
+        fflush(stdout);
     }
 
-    free(prefix);
     free(fmsg);
 }
 
