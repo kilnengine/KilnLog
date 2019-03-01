@@ -1,6 +1,6 @@
 #include "KilnLog.h"
 #include "stdio.h"
-
+//TODO: Proper unit testing
 int main(int argc, const char* argv[]) {
     KLog.setFile("logfile.log");
     KLog.flush();

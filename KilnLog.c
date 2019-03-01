@@ -105,7 +105,7 @@ void put(int level, char* msg, ...) {
 }
 
 /**
- * Sets what the highest level log that should be used.
+ * Sets the highest level log that should be used.
  * @param int level
  */
 
@@ -120,16 +120,30 @@ void setLevel(int level) {
     }
 }
 
+/**
+ * Set the file to write logs to.
+ * @param file The new log file
+ */
+
 void setFile(const char* file) {
     memset(logFile, 0, 256);
     strcpy(logFile, file);
     put(KLOG_INF, "Writing logs to file '%s'.", file);
 }
 
+/**
+ * Disable or enable silent logging. Silent does not output to stdout or stderr.
+ * @param bool _silent True to enable silent logging.
+ */
+
 void setSilent(const bool _silent) {
     silent = _silent;
     put(KLOG_INF, "Silent logging is %s.", silent ? "active" : "inactive");
 }
+
+/**
+ * Clears the log file.
+ */
 
 void flush() {
     FILE* file;
