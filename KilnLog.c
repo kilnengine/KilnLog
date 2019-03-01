@@ -44,11 +44,13 @@ void put(int level, char* msg, ...) {
     // 512 bytes for va and 50 to prevent overflow 
     const size_t maxLen = strlen(msg) + 50 + 512;
 
+    // the color of the message based on the log level
     char* color = (char*)malloc(10);
 
     // the final formatted message
     char* fmsg = (char*)malloc(maxLen);
 
+    // set color and prefix
     switch(level) {
         case KLOG_CRI:
         sprintf(color, COLOR_CRI);
@@ -76,20 +78,26 @@ void put(int level, char* msg, ...) {
         break;
     }
 
+    // add date string to message
     char* timestr = getTimeStr();
     sprintf(fmsg + strlen(fmsg), "[%s] ", timestr);
 
+    // format the message with the variable args
+    // and append to the log level prefix
     va_start(args, msg);
     vsprintf(fmsg + strlen(fmsg), msg, args);
     va_end(args);
     sprintf(fmsg + strlen(fmsg), "\n");
 
+    // verify that everything fits into the allocated buffer
+    // if not, truncate. the final char should be a \n
     if (strlen(fmsg) > maxLen) {
         int difference = strlen(fmsg) - maxLen + 1;
         put(KLOG_ERR, "Log exceeded max buffer size. Truncated %d bytes.", difference);
         sprintf(fmsg + maxLen - 1, "%s\n", COLOR_NOR);
     }
 
+    // if not silent, output to stdout or stderr with the ansi color code
     if (!silent) {
         FILE* outTo;
         if (level < KLOG_INF) {
@@ -101,6 +109,7 @@ void put(int level, char* msg, ...) {
         fflush(outTo);
     }
 
+    // append to the log file
     FILE* file = fopen(logFile, "a");
     fprintf(file, fmsg);
     fflush(file);
