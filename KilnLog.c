@@ -17,7 +17,7 @@ static const char* COLOR_RED_ON_YELLOW = "\x1B[93;41m";
 
 // Settings
 static int logLevel          = KLOG_DEB;
-static char* logFilePath     = "kilnlog.log";
+static char* logFile     = "kilnlog.log";
 static bool silent           = false;
 static bool lineWrap         = true;
 
@@ -41,24 +41,36 @@ void put(int level, char* msg, ...) {
     // 512 bytes for va and 50 to prevent overflow 
     const size_t maxLen = strlen(msg) + 50 + 512;
 
+    char* color = (char*)malloc(10);
+
     // the final formatted message
     char* fmsg = (char*)malloc(maxLen);
 
     switch(level) {
         case KLOG_CRI:
-        sprintf(fmsg, "%sCRI%s%s: ", COLOR_RED_ON_YELLOW, COLOR_NOR, COLOR_CRI); break;
+        sprintf(color, COLOR_CRI);
+        sprintf(fmsg, "CRI: ");
+        break;
 
         case KLOG_ERR:
-        sprintf(fmsg, "%sERR: ", COLOR_ERR); break;
+        sprintf(color, COLOR_ERR);
+        sprintf(fmsg, "ERR: ");
+        break;
 
         case KLOG_INF:
-        sprintf(fmsg, "%sINF: ", COLOR_INF); break;
+        sprintf(color, COLOR_INF);
+        sprintf(fmsg, "INF: ");
+        break;
 
         case KLOG_WAR:
-        sprintf(fmsg, "%sWAR: ", COLOR_WAR); break;
+        sprintf(color, COLOR_WAR);
+        sprintf(fmsg, "WAR: ");
+        break;
 
         case KLOG_DEB:
-        sprintf(fmsg, "%sDEB: ", COLOR_DEB); break;
+        sprintf(color, COLOR_DEB);
+        sprintf(fmsg, "DEB: ");
+        break;
     }
 
     va_start(args, msg);
@@ -69,14 +81,20 @@ void put(int level, char* msg, ...) {
     if (strlen(fmsg) > maxLen) {
         int difference = strlen(fmsg) - maxLen + 1;
         put(KLOG_ERR, "Log exceeded max buffer size. Truncated %d bytes.", difference);
-        sprintf(fmsg + maxLen - 1, "\n");
+        sprintf(fmsg + maxLen - 1, "%s\n", COLOR_NOR);
     }
 
     if (!silent) {
-        printf("%s%s", fmsg, COLOR_NOR);
+        printf("%s%s%s", color, fmsg, COLOR_NOR);
         fflush(stdout);
     }
 
+    FILE* file = fopen(logFile, "a");
+    fprintf(file, fmsg);
+    fflush(file);
+    fclose(file);
+
+    free(color);
     free(fmsg);
 }
 
@@ -95,7 +113,6 @@ void setLevel(int level) {
         setLevel(defaultLevel);
     }
 }
-
 
 
 kiln_log_interface const KLog = { 

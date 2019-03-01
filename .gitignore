@@ -7,3 +7,5 @@ Makefile
 test
 
 .vscode/*
+
+*.log
