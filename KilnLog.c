@@ -85,8 +85,14 @@ void put(int level, char* msg, ...) {
     }
 
     if (!silent) {
-        printf("%s%s%s", color, fmsg, COLOR_NOR);
-        fflush(stdout);
+        FILE* outTo;
+        if (level < KLOG_INF) {
+            outTo = stderr;
+        } else {
+            outTo = stdout;
+        }
+        fprintf(outTo, "%s%s%s", color, fmsg, COLOR_NOR);
+        fflush(outTo);
     }
 
     FILE* file = fopen(logFile, "a");
