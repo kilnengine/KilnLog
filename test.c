@@ -11,5 +11,7 @@ int main(int argc, const char* argv[]) {
 
     printf("TESTESTEST\n");
 
+    KLog.put(KLOG_INF, "%s", "TEST");
+
     return 0;
 }

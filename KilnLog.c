@@ -37,8 +37,9 @@ void put(int level, char* msg, ...) {
     
     va_list args;
 
-    // max length of the final formatted message. 512 byte buffer for variable args and prefix
-    const int maxLen = strlen(msg) + 512;
+    // max length of the final formatted message.
+    // 512 bytes for va and 50 to prevent overflow 
+    const size_t maxLen = strlen(msg) + 50 + 512;
 
     // the final formatted message
     char* fmsg = (char*)malloc(maxLen);
@@ -63,7 +64,13 @@ void put(int level, char* msg, ...) {
     va_start(args, msg);
     vsprintf(fmsg + strlen(fmsg), msg, args);
     va_end(args);
-    sprintf(fmsg + strlen(fmsg), "%c", '\n');
+    sprintf(fmsg + strlen(fmsg), "\n");
+
+    if (strlen(fmsg) > maxLen) {
+        int difference = strlen(fmsg) - maxLen + 1;
+        put(KLOG_ERR, "Log exceeded max buffer size. Truncated %d bytes.", difference);
+        sprintf(fmsg + maxLen - 1, "\n");
+    }
 
     if (!silent) {
         printf("%s%s", fmsg, COLOR_NOR);
