@@ -5,15 +5,15 @@ extern "C" {
 #include <stdbool.h>
 
 // Level definitions
-#define KILN_LOG_CRITICAL   -2
-#define KILN_LOG_ERROR      -1
-#define KILN_LOG_INFO       0
-#define KILN_LOG_WARN       1
-#define KILN_LOG_DEBUG      2
+#define KLOG_CRI -2
+#define KLOG_ERR -1
+#define KLOG_INF 0
+#define KLOG_WAR 1
+#define KLOG_DEB 2
 
 // Interface
 typedef struct {
-    void (*const print)(int level, char* msg, ...);
+    void (*const put)(int level, char* msg, ...);
     // void (*const trace)(void);
     void (*const setLevel)(int level);
     // void (*const setFileLocation)(const char* file);
@@ -23,7 +23,7 @@ typedef struct {
     // void (*const loadConfig)(const char* config);
 } kiln_log_interface;
 
-extern kiln_log_interface const klog;
+extern kiln_log_interface const KLog;
 
 #ifdef __cplusplus
 }

@@ -2,11 +2,11 @@
 #include "stdio.h"
 
 int main(int argc, const char* argv[]) {
-    klog.setLevel(KILN_LOG_DEBUG);
-    klog.print(KILN_LOG_CRITICAL, "TEST");
-    klog.print(KILN_LOG_ERROR, "TEST");
-    klog.print(KILN_LOG_INFO, "TEST");
-    klog.print(KILN_LOG_WARN, "TEST");
-    klog.print(KILN_LOG_DEBUG, "TEST");
+    KLog.setLevel(KLOG_DEB);
+    KLog.put(KLOG_CRI, "TEST");
+    KLog.put(KLOG_ERR, "TEST");
+    KLog.put(KLOG_INF, "TEST");
+    KLog.put(KLOG_WAR, "TEST");
+    KLog.put(KLOG_DEB, "TEST");
     return 0;
 }
