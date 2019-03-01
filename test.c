@@ -2,7 +2,7 @@
 #include "stdio.h"
 
 int main(int argc, const char* argv[]) {
-    KLog.setLevel(KLOG_DEB);
+    KLog.setLevel(5);
     KLog.put(KLOG_CRI, "TEST");
     KLog.put(KLOG_ERR, "TEST");
     KLog.put(KLOG_INF, "TEST");

@@ -16,10 +16,10 @@ static const char* COLOR_TRA = "\x1B[95m";
 static const char* COLOR_RED_ON_YELLOW = "\x1B[93;41m";
 
 // Settings
-static int logLevel            = KLOG_DEB;
-static char* logFilePath       = "kilnlog.log";
-static bool silent             = false;
-static bool lineWrap           = true;
+static int logLevel          = KLOG_DEB;
+static char* logFilePath     = "kilnlog.log";
+static bool silent           = false;
+static bool lineWrap         = true;
 
 void put(int level, char* msg, ...) {
     if (level > logLevel) { return; }
@@ -31,7 +31,6 @@ void put(int level, char* msg, ...) {
 
     // container for the message format
     char* prefix = (char*)malloc(prefixlen + strlen(msg));
-    char* fmst;
 
     switch(level) {
         case KLOG_CRI:
@@ -58,14 +57,13 @@ void put(int level, char* msg, ...) {
 }
 
 void setLevel(int level) {
-    // TODO: Use 'print' once implemented
-    if (level >= -1 && level <= KLOG_DEB) {
+    if (level >= KLOG_ERR && level <= KLOG_DEB) {
         logLevel = level;
-        // print(KLOG_INFO, )
-        printf("Kiln Logging Level: %d\n", level);
+        put(KLOG_INF, "Logging level has been set to %d.", level);
     } else {
-        logLevel = KLOG_DEB;
-        printf("Kiln Logging Level not supported: %d. Using default (%d).\n", level, logLevel);
+        int defaultLevel = KLOG_DEB;
+        put(KLOG_WAR, "Attempted to use unsupported log level (%d). Using default (%d).", level, defaultLevel);
+        setLevel(defaultLevel);
     }
 }
 
