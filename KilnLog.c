@@ -31,7 +31,7 @@ char* getTimeStr();
  * @param ... Arguments to be used with the format string.
  */
 
-void put(int level, char* msg, ...) {
+void put(int level, const char* msg, ...) {
     if (level > logLevel) { return; }
     if (level < KLOG_CRI) {
         put(KLOG_WAR, "Log level too low (%d). Using %d instead.", level, KLOG_INF);

@@ -13,7 +13,7 @@ extern "C" {
 
 // Interface
 typedef struct {
-    void (*const put)(int level, char* msg, ...);
+    void (*const put)(int level, const char* msg, ...);
     void (*const setLevel)(int level);
     void (*const setFile)(const char* file);
     void (*const setSilent)(const bool silent);
